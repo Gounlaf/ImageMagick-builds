@@ -25,6 +25,10 @@ jobs:
           - quantum: Q8
             hdri: HDRI
         include:
+          - quantum: Q8
+            depth: '8'
+          - quantum: Q16
+            depth: '16'
           - compiler: gcc
             cxx_compiler: g++
             packages: gcc g++
@@ -78,7 +82,7 @@ jobs:
         CXX: ${{ matrix.cxx_compiler }}
       run: |
         set -e
-        ./configure --with-quantum-depth=${{ matrix.quantum }} ${{ matrix.hdri_param }} --without-magick-plus-plus --without-perl --prefix=/usr
+        ./configure --with-quantum-depth=${{ matrix.depth }} ${{ matrix.hdri_param }} --without-magick-plus-plus --without-perl --prefix=/usr
         make
         make install DESTDIR=$(readlink -f /appdir)
 
