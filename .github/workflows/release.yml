@@ -17,33 +17,26 @@ jobs:
 
     strategy:
       matrix:
-#        compiler: [ gcc, clang ]
-        compiler: [ gcc ]
-#        quantum: [ Q8, Q16 ]
-#        quantum: [ Q8 ]
-#        hdri: [ DHDRI, HDRI ]
-#        exclude:
-#          - quantum: Q8
-#            hdri: HDRI
-        include:
-          - quantum: Q8
+        compiler:
+          - name: gcc
+            cxx_compiler: g++
+            packages: gcc g++
+          - name: clang
+            cxx_compiler: clang++
+            packages: clang
+        quantum:
+          - name: Q8
             depth: '8'
             hdri_flag: ''
             hdri_param: '--disable-hdri'
-          - quantum: Q16
+          - name: Q16
             depth: '16'
             hdri_flag: ''
             hdri_param: '--disable-hdri'
-          - quantum: Q16
+          - name: Q16-HDRI
             depth: '16'
             hdri_flag: 'HDRI'
             hdri_param: ''
-          - compiler: gcc
-            cxx_compiler: g++
-            packages: gcc g++
-#          - compiler: clang
-#            cxx_compiler: clang++
-#            packages: clang
 
     steps:
     - name: Install dependencies
@@ -85,7 +78,7 @@ jobs:
         CXX: ${{ matrix.cxx_compiler }}
       run: |
         set -e
-        ./configure --with-quantum-depth=${{ matrix.depth }} ${{ matrix.hdri_param }} --without-magick-plus-plus --without-perl --prefix=/usr
+        ./configure --with-quantum-depth=${{ matrix.quantum.depth }} ${{ matrix.quatum.hdri_param }} --without-magick-plus-plus --without-perl --prefix=/usr
         make
         make install DESTDIR=$(readlink -f /appdir)
 
@@ -99,7 +92,7 @@ jobs:
         unset QTDIR
         unset QT_PLUGIN_PATH
         unset LD_LIBRARY_PATH
-        export VERSION=$(git rev-parse --short HEAD)-${{ matrix.compiler }}-${{ matrix.quantum }}${{ matrix.hdri_flag }}
+        export VERSION=$(git rev-parse --short HEAD)-${{ matrix.compiler.name }}-${{ matrix.quantum.name }}${{ matrix.quantum.hdri_flag }}
         /app-image/linuxdeployqt-continuous-x86_64.AppImage --appimage-extract-and-run /appdir/usr/share/applications/imagemagick.desktop -bundle-non-qt-libs
         rm /appdir/AppRun
         cp ./app-image/AppRun /appdir
@@ -113,7 +106,7 @@ jobs:
     - name: Upload ImageMagick AppImage
       uses: actions/upload-artifact@v4
       with:
-        name: AppImage-${{ matrix.compiler }}-${{ matrix.quantum }}${{ matrix.hdri_flag }}
+        name: AppImage-${{ matrix.compiler.name }}-${{ matrix.quantum.name }}${{ matrix.quantum.hdri_flag }}
         path: artifacts
 
 #  build_windows:
@@ -269,6 +262,5 @@ jobs:
 #          artifacts/AppImage-clang/ImageMagick--clang-x86_64.AppImage
 #          artifacts/AppImage-gcc/ImageMagick--gcc-x86_64.AppImage
 #          artifacts/Msix-Q16-HDRI/ImageMagick.Q16-HDRI.msixbundle
-
         files: |
           artifacts/AppImage-gcc-Q8/ImageMagick--gcc-Q8-x86_64.AppImage
