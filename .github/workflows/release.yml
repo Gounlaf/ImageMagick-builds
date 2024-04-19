@@ -59,8 +59,11 @@ jobs:
         # triggered a workflow, this defaults to the reference or SHA for that event.
         # Otherwise, uses the default branch.
         ref: ${{ github.ref_name }}
-    - run: |
-        echo "src_commit=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+    # Avoid fatal: detected dubious ownership in repository at '/__w/ImageMagick/ImageMagick'
+    # Possible workaround: https://github.com/actions/runner/issues/2033#issuecomment-1598547465
+    - name: Flag current workspace as safe for git
+      run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
     - name: Download AppImage
       run: |
@@ -91,7 +94,7 @@ jobs:
         unset QTDIR
         unset QT_PLUGIN_PATH
         unset LD_LIBRARY_PATH
-        export VERSION=$src_commit-${{ matrix.compiler.name }}-${{ matrix.quantum.name }}
+        export VERSION=$(git rev-parse --short HEAD)-${{ matrix.compiler.name }}-${{ matrix.quantum.name }}
         /app-image/linuxdeployqt-continuous-x86_64.AppImage --appimage-extract-and-run /appdir/usr/share/applications/imagemagick.desktop -bundle-non-qt-libs
         rm /appdir/AppRun
         cp ./app-image/AppRun /appdir
