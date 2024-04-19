@@ -265,9 +265,9 @@ jobs:
 #          artifacts/AppImage-gcc/ImageMagick--gcc-x86_64.AppImage
 #          artifacts/Msix-Q16-HDRI/ImageMagick.Q16-HDRI.msixbundle
         files: |
-          artifacts/AppImage-gcc-Q8/ImageMagick--gcc-Q8-x86_64.AppImage
-          artifacts/AppImage-gcc-Q16/ImageMagick--gcc-Q16-x86_64.AppImage
-          artifacts/AppImage-gcc-Q16-HDRI/ImageMagick--gcc-Q16-HDRI-x86_64.AppImage
-          artifacts/AppImage-clang-Q8/ImageMagick--clang-Q8-x86_64.AppImage
-          artifacts/AppImage-clang-Q16/ImageMagick--clang-Q16-x86_64.AppImage
-          artifacts/AppImage-clang-Q16-HDRI/ImageMagick--clang-Q16-HDRI-x86_64.AppImage
+          artifacts/AppImage-gcc-Q8/ImageMagick-*-gcc-Q8-x86_64.AppImage
+          artifacts/AppImage-gcc-Q16/ImageMagick-*-gcc-Q16-x86_64.AppImage
+          artifacts/AppImage-gcc-Q16-HDRI/ImageMagick-*-gcc-Q16-HDRI-x86_64.AppImage
+          artifacts/AppImage-clang-Q8/ImageMagick-*-clang-Q8-x86_64.AppImage
+          artifacts/AppImage-clang-Q16/ImageMagick-*-clang-Q16-x86_64.AppImage
+          artifacts/AppImage-clang-Q16-HDRI/ImageMagick-*-clang-Q16-HDRI-x86_64.AppImage
